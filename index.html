@@ -3,47 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Hardware Store</title>
     
-    <!-- Include Alpine.js -->
+    <!-- Include Alpine.js with CDN fallback -->
     <script defer src="config/localjs/alpine.min.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            console.log("Alpine.js initialized:", Alpine.version);
+        });
+        window.addEventListener('load', () => {
+            if (typeof Alpine === 'undefined') {
+                console.warn("Alpine.js failed to load. Falling back to CDN.");
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js';
+                script.defer = true;
+                script.onerror = () => console.error("Failed to load Alpine.js CDN.");
+                document.head.appendChild(script);
+            }
+        });
+    </script>
     
     <!-- Link to Local Semantic UI CSS -->
     <link rel="stylesheet" href="config/localui/semantic.min.css">
     
-    <!-- Include jQuery -->
+    <!-- Include jQuery with CDN fallback -->
     <script src="config/localjs/jquery-3.6.0.min.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (typeof jQuery === 'undefined') {
+                console.warn("jQuery failed to load. Falling back to CDN.");
+                const script = document.createElement('script');
+                script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+                script.onerror = () => console.error("Failed to load jQuery CDN.");
+                document.head.appendChild(script);
+            }
+        });
+    </script>
+    
     <!-- Semantic UI JS -->
     <script src="config/localui/semantic.min.js"></script>
+    
+    <!-- Alpine Store Settings -->
+    <script defer src="config/settings.js"></script>
     
     <style>
         /* Remove rounded corners for navigation */
         .ui.menu {
             border-radius: 0 !important;
         }
+        /* Ensure dropdown menus are styled correctly */
+        .ui.dropdown .menu {
+            min-width: 150px;
+        }
+        /* Error message styling */
+        .ui.error.message {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        /* Ensure container has padding */
+        .ui.container {
+            padding: 2em 0;
+        }
     </style>
 </head>
 <body>
+    <!-- Global Error Message -->
+    <div class="ui error message" x-data="{ error: '' }" x-show="error" x-text="error" x-transition></div>
+
     <!-- Semantic UI Menu -->
-    <div class="ui inverted menu blue" x-data>
+    <div class="ui inverted menu blue" x-data="{ initializeDropdowns() }">
         <a class="item" @click.prevent="navigateTo('home/welcome')">Home</a>
         <a class="item" @click.prevent="navigateTo('about/about')">About</a>
         
-        <!-- Dropdown with Alpine.js -->
-        <div class="ui dropdown item" x-data="{ open: false }" @click="open = !open">
+        <!-- Contact Dropdown -->
+        <div class="ui dropdown item" x-data="{ open: false }" @click="open = !open" @keydown.escape="open = false">
             Contact <i class="dropdown icon"></i>
-            <div class="menu" x-show="open" @click.outside="open = false">
+            <div class="menu" x-show="open" @click.outside="open = false" x-transition>
                 <a class="item" href="#" @click.prevent="navigateTo('contacts/contact_all'); open = false;">All Contacts</a>
                 <a class="item" href="#" @click.prevent="navigateTo('contacts/contact_add'); open = false;">Add Contact</a>
             </div>
         </div>
         
-        <!-- Chat Dropdown Menu - NEWLY ADDED -->
-        <div class="ui dropdown item" x-data="{ open: false }" @click="open = !open">
+        <!-- Chat Dropdown -->
+        <div class="ui dropdown item" x-data="{ open: false }" @click="open = !open" @keydown.escape="open = false">
             Chat <i class="dropdown icon"></i>
-            <div class="menu" x-show="open" @click.outside="open = false">
+            <div class="menu" x-show="open" @click.outside="open = false" x-transition>
                 <a class="item" href="#" @click.prevent="navigateTo('chat/new_chat'); open = false;">New Chat</a>
                 <a class="item" href="#" @click.prevent="navigateTo('chat/chat_list'); open = false;">Chat List</a>
+            </div>
+        </div>
+
+        <!-- Product Dropdown -->
+        <div class="ui dropdown item" x-data="{ open: false }" @click="open = !open" @keydown.escape="open = false">
+            Product <i class="dropdown icon"></i>
+            <div class="menu" x-show="open" @click.outside="open = false" x-transition>
+                <a class="item" href="#" @click.prevent="navigateTo('product/add_product'); open = false;">Add Product</a>
+                <a class="item" href="#" @click.prevent="navigateTo('product/product_list'); open = false;">Product List</a>
+                <a class="item" href="#" @click.prevent="navigateTo('product/cart_item'); open = false;">Cart</a>
+                <a class="item" href="#" @click.prevent="navigateTo('product/checkout'); open = false;">Checkout</a>
+                <a class="item" href="#" @click.prevent="navigateTo('product/payment'); open = false;">Payment</a>
+                <a class="item" href="#" @click.prevent="navigateTo('product/order_list'); open = false;">Order List</a>
+           
             </div>
         </div>
         
@@ -51,8 +114,7 @@
         
         <!-- Login/Logout Button -->
         <div class="right menu">
-            <a class="ui green button"><i class="user icon"></i> Login</a>
-            <a href="#" class="ui item"></a>
+            <a class="ui green button" x-data="{ loggedIn: false }" x-text="loggedIn ? 'Logout' : 'Login'" @click.prevent="toggleLogin()"></a>
         </div>
     </div>
     
@@ -61,15 +123,49 @@
         <!-- Dynamic content will be loaded here -->
     </div>
     
+    <!-- Router and App Scripts -->
     <script src="config/router.js"></script>
     <script defer src="script/app.js"></script>
     
     <script>
-        if (typeof Alpine === 'undefined') {
-            console.error("Alpine.js is not loaded.");
-        } else {
-            console.log("Alpine.js loaded successfully:", Alpine.version);
-        }
+        // Initialize Semantic UI dropdowns
+        Alpine.data('initializeDropdowns', () => ({
+            init() {
+                try {
+                    $(this.$el).find('.ui.dropdown').dropdown({
+                        on: 'click',
+                        action: 'nothing'
+                    });
+                } catch (error) {
+                    console.error("Failed to initialize Semantic UI dropdowns:", error);
+                }
+            }
+        }));
+
+        // Navigation handler
+        Alpine.data('navigation', () => ({
+            navigateTo(path) {
+                console.log("Navigating to:", path);
+                try {
+                    // Assuming router.js handles navigation
+                    window.router.navigate(path);
+                } catch (error) {
+                    console.error("Navigation error:", error);
+                    Alpine.store('settings').showError(`Failed to navigate to ${path}`);
+                }
+            }
+        }));
+
+        // Login/Logout toggle
+        Alpine.data('loginToggle', () => ({
+            loggedIn: false,
+            toggleLogin() {
+                this.loggedIn = !this.loggedIn;
+                console.log(this.loggedIn ? 'Logged in' : 'Logged out');
+                // Placeholder for actual login/logout logic
+                Alpine.store('settings').showError(this.loggedIn ? 'Logged in successfully' : 'Logged out');
+            }
+        }));
     </script>
 </body>
 </html>
