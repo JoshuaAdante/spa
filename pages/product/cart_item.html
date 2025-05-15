@@ -1,16 +1,16 @@
-<div class="ui segment" style="background-color: #1a1a1a;" x-data="cartComponent">
+<div class="ui segment" style="background-color: #5d696d;" x-data="cartComponent">
     <div class="ui grid">
         <div class="eight wide column">
             <h2 class="ui header" style="color: #ffffff;">
-                <i class="shopping cart icon" style="color: #9b59b6;"></i>
+                <i class="shopping cart icon" style="color: #6fdcea;"></i>
                 <div class="content">
                     Your Cart
-                    <div class="sub header" style="color: #b19cd9;">View items in your cart</div>
+                    <div class="sub header" style="color: #9cd4ed;">View items in your cart</div>
                 </div>
             </h2>
         </div>
         <div class="eight wide column" style="text-align: right;">
-            <button class="ui primary button" style="background-color: #9b59b6; color: #ffffff;" @click="toggleEditMode" x-text="editMode ? 'Done' : 'Edit'"></button>
+            <button class="ui primary button" style="background-color: #86bbe1; color: #ffffff;" @click="toggleEditMode" x-text="editMode ? 'Done' : 'Edit'"></button>
         </div>
     </div>
     <div class="ui message" x-show="message" :class="messageType" style="background-color: #2c2c2c; color: #ffffff;">
@@ -27,7 +27,7 @@
                 </div>
                 <div class="cart-details">
                     <div class="cart-name" style="color: #ffffff;" x-text="item.name || 'Unknown'"></div>
-                    <div class="cart-description" style="color: #b19cd9;" x-text="item.description || 'Product description goes here.'"></div>
+                    <div class="cart-description" style="color: #7ad3e2;" x-text="item.description || 'Product description goes here.'"></div>
                     <div class="cart-price" style="color: #9b59b6;" x-text="`Price: ₱${parseFloat(item.price).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`"></div>
                     <div class="cart-quantity" style="color: #ffffff;">
                         Quantity:
@@ -285,7 +285,7 @@
             while (retries > 0) {
                 try {
                     const updatedStock = item.stock - 1;
-                    const response = await Alpine.store('api').fetch(`http://172.17.100.14:3342/trubias2/api/products/${item.id}/`, {
+                    const response = await Alpine.store('api').fetch(`http://172.17.100.14:3342/adante2/api/products/${item.id}/`, {
                         method: "PATCH",
                         body: JSON.stringify({ stock: updatedStock }),
                         headers: { 'Content-Type': 'application/json' }
@@ -333,7 +333,7 @@
             while (retries > 0) {
                 try {
                     const updatedStock = item.stock + 1;
-                    const response = await Alpine.store('api').fetch(`http://172.17.100.14:3342/trubias2/api/products/${item.id}/`, {
+                    const response = await Alpine.store('api').fetch(`http://172.17.100.14:3342/adante2/api/products/${item.id}/`, {
                         method: "PATCH",
                         body: JSON.stringify({ stock: updatedStock }),
                         headers: { 'Content-Type': 'application/json' }
@@ -385,7 +385,7 @@
                 for (const index of itemsToRemove) {
                     const item = this.cartItems[index];
                     const updatedStock = item.stock + item.quantity;
-                    const response = await Alpine.store('api').fetch(`http://172.17.100.14:3342/trubias2/api/products/${item.id}/`, {
+                    const response = await Alpine.store('api').fetch(`http://172.17.100.14:3342/adante2/api/products/${item.id}/`, {
                         method: "PATCH",
                         body: JSON.stringify({ stock: updatedStock }),
                         headers: { 'Content-Type': 'application/json' }

@@ -3,7 +3,7 @@
         <p x-text="message"></p>
     </div>
     <h2 class="ui header" style="color: #ffffff; margin-bottom: 25px;">
-        <i class="credit card icon" style="color: #9b59b6;"></i>
+        <i class="credit card icon" style="color: #6bebeb;"></i>
         <div class="content">
             Payment
             <div class="sub header" style="color: #b19cd9; margin-top: 5px;">Enter your payment details</div>
@@ -13,7 +13,7 @@
     <!-- Order Summary Section -->
     <div class="order-summary" style="background-color: #2c2c2c; border-radius: 20px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
         <h3 class="ui header" style="color: #ffffff; margin-bottom: 20px;">
-            <i class="shopping basket icon" style="color: #9b59b6;"></i>
+            <i class="shopping basket icon" style="color: #69f8f1;"></i>
             <div class="content">
                 Order Summary
                 <div class="sub header" style="color: #b19cd9;">Review your selected items</div>
@@ -24,7 +24,7 @@
         </div>
         <div class="cart-grid" x-show="cartItems.length > 0" style="display: flex; flex-direction: column; gap: 10px;">
             <template x-for="(item, index) in cartItems" :key="index">
-                <div class="cart-card" @click="toggleDetails(index)" style="display: flex; flex-direction: row; align-items: center; border: 1px solid #9b59b6; border-radius: 8px; padding: 8px; background: #3c3c3c; cursor: pointer;">
+                <div class="cart-card" @click="toggleDetails(index)" style="display: flex; flex-direction: row; align-items: center; border: 1px solid #74e1e9; border-radius: 8px; padding: 8px; background: #3c3c3c; cursor: pointer;">
                     <div class="cart-image" style="position: relative; width: 200px; height: 100px; flex-shrink: 0;">
                         <img :src="item.product_image || 'https://via.placeholder.com/50'" alt="Product Image" style="width: 100%; height: 100%; object-fit: contain;" @error="console.log('Payment image failed to load for ' + item.name + ': ' + item.product_image)">
                     </div>
@@ -406,7 +406,7 @@
             }
    
             try {
-                const response = await Alpine.store('api').fetch('http://172.17.100.14:3342/trubias2/api/payments/', {
+                const response = await Alpine.store('api').fetch('http://172.17.100.14:3342/adante2/api/payments/', {
                     method: 'POST',
                     body: formData
                 });
@@ -428,7 +428,7 @@
                 // Update stock quantities in the database
                 for (const item of this.cartItems) {
                     const updatedStock = item.stock - item.quantity;
-                    const stockResponse = await Alpine.store('api').fetch(`http://172.17.100.14:3342/trubias2/api/products/${item.id}/`, {
+                    const stockResponse = await Alpine.store('api').fetch(`http://172.17.100.14:3342/adante2/api/products/${item.id}/`, {
                         method: "PATCH",
                         body: JSON.stringify({ stock: updatedStock }),
                         headers: { 'Content-Type': 'application/json' }

@@ -1,54 +1,87 @@
-<div class="ui raised segment" style="background-color: #1a1a1a; border-radius: 10px; box-shadow: 0 3px 6px rgba(0,0,0,0.3); padding: 15px;" x-data="addProductComponent">
-    <div class="ui message" x-show="message" :class="messageType" style="border-radius: 6px; margin-bottom: 15px; background-color: #2c2c2c; color: #ffffff;">
-        <p x-text="message"></p>
+<div class="product-form-container" style="background-color: #4c5659; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.25); padding: 25px; max-width: 700px; margin: 0 auto;" x-data="addProductComponent">
+    <!-- Notification Message -->
+    <div class="notification-message" x-show="message" :class="messageType" style="border-radius: 8px; margin-bottom: 20px; padding: 12px 16px; background-color: #2a2a2a; color: #ffffff; border-left: 4px solid #8fdae6; display: flex; align-items: center;">
+        <i class="info circle icon" style="margin-right: 10px;"></i>
+        <p x-text="message" style="margin: 0;"></p>
     </div>
-    <h2 class="ui header" style="color: #ffffff; margin-bottom: 20px;">
-        <i class="box icon" style="color: #9b59b6;"></i>
-        <div class="content" style="font-size: 1.2em;">
-            Add Product
-            <div class="sub header" style="color: #b19cd9; margin-top: 3px; font-size: 0.9em;">Add a new product to your store</div>
+    
+    <!-- Form Header -->
+    <div class="form-header" style="margin-bottom: 25px; display: flex; align-items: center; gap: 12px;">
+        <div style="background: linear-gradient(135deg, #59eaea 0%, #a4baea 100%); width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <i class="box icon" style="color: white; font-size: 1.4em;"></i>
         </div>
-    </h2>
-    <form class="ui form" enctype="multipart/form-data">
-        <div class="field">
-            <label style="color: #ffffff; font-weight: 600; margin-bottom: 6px; font-size: 0.9em;">Product Name</label>
-            <div class="ui left icon input" style="margin-bottom: 12px;">
-                <input type="text" x-model="newProduct.name" required placeholder="Product name" maxlength="100" style="border-radius: 6px; border: 1px solid #9b59b6; padding: 10px 12px 10px 35px; background-color: #2c2c2c; color: #ffffff; font-size: 0.8em;">
-                <i class="box icon" style="color: #9b59b6; opacity: 0.8;"></i>
+        <div>
+            <h2 style="color: #ffffff; margin: 0 0 4px 0; font-size: 1.5em; font-weight: 600;">Add New Product</h2>
+            <p style="color: #a0a0a0; margin: 0; font-size: 0.9em;">Fill in the details below to add a product to your store</p>
+        </div>
+    </div>
+    
+    <!-- Product Form -->
+    <form class="product-form" enctype="multipart/form-data" style="display: grid; gap: 20px;">
+        <!-- Product Name -->
+        <div class="form-field">
+            <label style="color: #d0d0d0; font-weight: 500; margin-bottom: 8px; display: block; font-size: 0.95em;">Product Name</label>
+            <div style="position: relative;">
+                <input type="text" x-model="newProduct.name" required placeholder="Enter product name" maxlength="100" 
+                       style="width: 100%; border-radius: 8px; border: 1px solid #3a3a3a; padding: 12px 16px 12px 42px; background-color: #2a2a2a; color: #ffffff; font-size: 0.95em; transition: all 0.2s ease;">
+                <i class="box icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #76d2ee; opacity: 0.8;"></i>
             </div>
         </div>
-        <div class="field">
-            <label style="color: #ffffff; font-weight: 600; margin-bottom: 6px; font-size: 0.9em;">Description</label>
-            <textarea x-model="newProduct.description" required placeholder="Product description" rows="3" style="border-radius: 6px; border: 1px solid #9b59b6; resize: vertical; padding: 10px 12px; margin-bottom: 15px; background-color: #2c2c2c; color: #ffffff; font-size: 0.8em;"></textarea>
+        
+        <!-- Description -->
+        <div class="form-field">
+            <label style="color: #d0d0d0; font-weight: 500; margin-bottom: 8px; display: block; font-size: 0.95em;">Description</label>
+            <textarea x-model="newProduct.description" required placeholder="Enter product description" rows="3" 
+                      style="width: 100%; border-radius: 8px; border: 1px solid #3a3a3a; resize: vertical; padding: 12px 16px; background-color: #2a2a2a; color: #ffffff; font-size: 0.95em; min-height: 100px;"></textarea>
         </div>
-        <div class="two fields" style="display: flex; gap: 15px;">
-            <div class="field">
-                <label style="color: #ffffff; font-weight: 600; margin-bottom: 6px; font-size: 0.9em;">Price</label>
-                <div class="ui left icon input" style="margin-bottom: 12px;">
-                    <input type="number" step="0.01" min="0" x-model.number="newProduct.price" required placeholder="Price" style="border-radius: 6px; border: 1px solid #9b59b6; padding: 10px 12px 10px 35px; background-color: #2c2c2c; color: #ffffff; font-size: 0.8em;">
-                    <i class="dollar sign icon" style="color: #9b59b6; opacity: 0.8;"></i>
+        
+        <!-- Price & Stock -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Price -->
+            <div class="form-field">
+                <label style="color: #d0d0d0; font-weight: 500; margin-bottom: 8px; display: block; font-size: 0.95em;">Price</label>
+                <div style="position: relative;">
+                    <input type="number" step="0.01" min="0" x-model.number="newProduct.price" required placeholder="0.00" 
+                           style="width: 100%; border-radius: 8px; border: 1px solid #3a3a3a; padding: 12px 16px 12px 42px; background-color: #2a2a2a; color: #ffffff; font-size: 0.95em;">
+                    <i class="dollar sign icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #6be5ee; opacity: 0.8;"></i>
                 </div>
             </div>
-            <div class="field">
-                <label style="color: #ffffff; font-weight: 600; margin-bottom: 6px; font-size: 0.9em;">Stock</label>
-                <div class="ui left icon input" style="margin-bottom: 12px;">
-                    <input type="number" min="0" x-model.number="newProduct.stock" required placeholder="Stock" style="border-radius: 6px; border: 1px solid #9b59b6; padding: 10px 12px 10px 35px; background-color: #2c2c2c; color: #ffffff; font-size: 0.8em;">
-                    <i class="cubes icon" style="color: #9b59b6; opacity: 0.8;"></i>
+            
+            <!-- Stock -->
+            <div class="form-field">
+                <label style="color: #d0d0d0; font-weight: 500; margin-bottom: 8px; display: block; font-size: 0.95em;">Stock</label>
+                <div style="position: relative;">
+                    <input type="number" min="0" x-model.number="newProduct.stock" required placeholder="0" 
+                           style="width: 100%; border-radius: 8px; border: 1px solid #3a3a3a; padding: 12px 16px 12px 42px; background-color: #2a2a2a; color: #ffffff; font-size: 0.95em;">
+                    <i class="cubes icon" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #7ee2ea; opacity: 0.8;"></i>
                 </div>
             </div>
         </div>
-        <div class="field">
-            <label style="color: #ffffff; font-weight: 600; margin-bottom: 6px; font-size: 0.9em;">Product Image (Optional)</label>
-            <div class="ui input" style="margin-bottom: 12px;">
-                <input type="file" accept="image/*" @change="handleImageChange($event)" x-ref="fileInput" style="border-radius: 6px; border: 1px solid #9b59b6; padding: 10px 12px; background-color: #2c2c2c; color: #ffffff; font-size: 0.8em;">
+        
+        <!-- Image Upload -->
+        <div class="form-field">
+            <label style="color: #d0d0d0; font-weight: 500; margin-bottom: 8px; display: block; font-size: 0.95em;">Product Image (Optional)</label>
+            <div x-show="!imagePreview" style="border: 2px dashed #3a3a3a; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s ease;" @click="$refs.fileInput.click()">
+                <i class="cloud upload icon" style="font-size: 2em; color: #7bb5d4; margin-bottom: 10px;"></i>
+                <p style="color: #a0a0a0; margin: 0; font-size: 0.9em;">Click to upload or drag and drop</p>
+                <p style="color: #707070; margin: 5px 0 0 0; font-size: 0.8em;">PNG, JPG up to 5MB</p>
+                <input type="file" accept="image/*" @change="handleImageChange($event)" x-ref="fileInput" style="display: none;">
             </div>
-            <div x-show="imagePreview" style="margin-top: 8px;">
-                <img :src="imagePreview" alt="Preview" style="max-width: 80px; max-height: 80px;">
-                <button class="ui tiny button" @click="clearImage" style="margin-left: 8px; background-color: #2c2c2c; color: #ffffff; border: 1px solid #9b59b6; font-size: 0.8em;">Clear Image</button>
+            <div x-show="imagePreview" style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                <img :src="imagePreview" alt="Preview" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #3a3a3a;">
+                <div>
+                    <button type="button" @click="clearImage" style="background: none; border: none; color: #7ddff0; cursor: pointer; font-size: 0.9em; display: flex; align-items: center; gap: 5px;">
+                        <i class="trash icon"></i> Remove Image
+                    </button>
+                </div>
             </div>
         </div>
-        <button class="ui primary button" @click.prevent="addProduct" style="background-color: #9b59b6; color: #ffffff; border-radius: 6px; padding: 10px 16px; font-weight: 600; letter-spacing: 0.5px; transition: all 0.3s ease; font-size: 0.9em;">
-            <i class="plus icon"></i> Add Product
+        
+        <!-- Submit Button -->
+        <button class="submit-button" @click.prevent="addProduct" 
+                style="background: linear-gradient(135deg, #5ecff2 0%, #4333ed 100%); color: white; border: none; border-radius: 8px; padding: 14px 20px; font-weight: 600; font-size: 1em; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;">
+            <i class="plus icon"></i>
+            <span>Add Product</span>
         </button>
     </form>
 </div>
@@ -135,7 +168,7 @@ Alpine.data("addProductComponent", () => ({
         }
 
         try {
-            const response = await fetch('http://172.17.100.14:3342/trubias2/api/products/', {
+            const response = await fetch('http://172.17.100.14:3342/adante2/api/products/', {
                 method: "POST",
                 body: formData
             });
